@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 
 public class Alaska implements Airline {
-    private ArrayList<String> passengers;
+    private ArrayList<Passenger> passengers;
 
     /**
      * Constructs a Alaska airline object, initializes passenger ArrayList
@@ -20,6 +20,11 @@ public class Alaska implements Airline {
     @Override
     public String getName() {
         return "Alaska Airlines";
+    }
+
+    @Override
+    public char getTerminal() {
+        return 'A';
     }
 
     @Override
@@ -39,7 +44,7 @@ public class Alaska implements Airline {
     }
 
     @Override
-    public void addPassenger(String passenger) {
+    public void addPassenger(Passenger passenger) {
         passengers.add(passenger);
     }
 }

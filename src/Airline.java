@@ -16,20 +16,38 @@ public interface Airline extends Serializable {
     String getName();
 
     /**
+     * Gets the terminal of the airline
+     * @return The terminal letter
+     */
+    char getTerminal();
+
+    /**
      * Gets a description of the airline
      * @return The airline's description
      */
     String getDescription();
 
     /**
-     * Gets an array of the passengers that are on the flight
+     * Gets an array of the passengers limited information that are on the flight
      * @return The passengers names in the format "last initial. first, age"
+     */
+    default String[] getPassengersLimited() {
+        String[] passengersLimited = new String[getPassengers().size()];
+        for (int i = 0; i < passengersLimited.length; i++) {
+            //implementation requires passenger
+        }
+        return passengersLimited;
+    }
+
+    /**
+     * Gets an array list of the passengers are on the flight
+     * @return An array list of the passengers
      */
     ArrayList getPassengers();
 
     /**
      * Adds a passenger to the passenger array
-     * @param passenger String of a passenger in the format "last initial. first, age"
+     * @param passenger Passenger to add the the passenger array list
      */
-    void addPassenger(String passenger);
+    void addPassenger(Passenger passenger);
 }

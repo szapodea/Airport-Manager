@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 
 public class Southwest implements Airline {
-    private ArrayList<String> passengers;
+    private ArrayList<Passenger> passengers;
 
     /**
      * Constructs a Southwest airline object, initializes passenger ArrayList
@@ -23,6 +23,11 @@ public class Southwest implements Airline {
     }
 
     @Override
+    public char getTerminal() {
+        return 'B';
+    }
+
+    @Override
     public String getDescription() {
         return "Southwest Airlines is proud to offer flights to Purdue University.\n" +
                 "We are happy to offer free in flight wifi, as well as our amazing snacks.\n" +
@@ -31,13 +36,14 @@ public class Southwest implements Airline {
                 "We hope you choose Southwest for your next flight.";
     }
 
+
     @Override
     public ArrayList getPassengers() {
         return passengers;
     }
 
     @Override
-    public void addPassenger(String passenger) {
+    public void addPassenger(Passenger passenger) {
         passengers.add(passenger);
     }
 }
