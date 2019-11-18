@@ -3,7 +3,7 @@
  * Note: A passenger does not need a boarding pass when they are initially created,
  * but they should have one when they buy a ticket.
  *
- * @author Luke Bainbridge, Stephan Zapodeanu
+ * @author Stephan Zapodeanu
  * @version 11/16/19
  */
 

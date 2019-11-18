@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * An interface that extends Serializable.
  *
- * @author Luke Bainbridge, Stephan Zapodeanu
+ * @author Luke Bainbridge
  * @version 11/16/19
  */
 

@@ -6,9 +6,10 @@ import java.io.Serializable;
  * Note: Gates are associated with flights after the first passenger buys a ticket, and can
  * be deleted after the flight is full.
  *
- * @author Luke Bainbridge, Stephan Zapodeanu
+ * @author Luke Bainbridge
  * @version 11/16/19
  */
 
 public class Gate implements Serializable {
+
 }

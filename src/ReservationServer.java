@@ -5,7 +5,7 @@
  * Example: Client 1 and Client 2 are both connected to the server and booking a Southwest flight.
  * If Client 1 books the last Southwest ticket, Client 2 should no longer be able to book it.
  *
- * @author Luke Bainbridge, Stephan Zapodeanu
+ * @author Stephan Zapodeanu
  * @version 11/16/19
  */
 

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * A class that implements Airline.
  *
- * @author Luke Bainbridge, Stephan Zapodeanu
+ * @author Luke Bainbridge
  * @version 11/16/19
  */
 
