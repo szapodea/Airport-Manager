@@ -6,5 +6,19 @@
  * @version 11/16/19
  */
 
-public class ReservationClient {
+public class ReservationClient implements Runnable{
+    /**
+     * Main method to start the client
+     * @param args Arguments for the client
+     */
+    public static void main(String[] args){
+
+    }
+
+    /**
+     * A thread to run each client
+     */
+    public void run() {
+
+    }
 }
