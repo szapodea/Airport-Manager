@@ -13,7 +13,7 @@ public class Alaska implements Airline {
     /**
      * Constructs a Alaska airline object, initializes passenger ArrayList
      */
-    Alaska() {
+    public Alaska() {
         passengers = new ArrayList<>();
     }
 

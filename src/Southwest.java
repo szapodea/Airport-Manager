@@ -13,7 +13,7 @@ public class Southwest implements Airline {
     /**
      * Constructs a Southwest airline object, initializes passenger ArrayList
      */
-    Southwest() {
+    public Southwest() {
         passengers = new ArrayList<>();
     }
 

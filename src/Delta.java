@@ -13,7 +13,7 @@ public class Delta implements Airline {
     /**
      * Constructs a Delta airline object, initializes passenger ArrayList
      */
-    Delta() {
+    public Delta() {
         passengers = new ArrayList<>();
     }
 
