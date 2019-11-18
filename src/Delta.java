@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * A class that implements Airline.
  *
  * @author Luke Bainbridge
- * @version 11/16/19
+ * @version 11/17/19
  */
 
 public class Delta implements Airline {
