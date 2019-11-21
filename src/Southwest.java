@@ -38,7 +38,7 @@ public class Southwest implements Airline {
 
 
     @Override
-    public ArrayList getPassengers() {
+    public ArrayList<Passenger> getPassengers() {
         return passengers;
     }
 

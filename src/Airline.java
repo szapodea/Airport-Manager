@@ -34,7 +34,8 @@ public interface Airline extends Serializable {
     default String[] getPassengersLimited() {
         String[] passengersLimited = new String[getPassengers().size()];
         for (int i = 0; i < passengersLimited.length; i++) {
-            //implementation requires passenger
+            passengersLimited[i] = getPassengers().get(i).getLastName().charAt(i) + ". " +
+                    getPassengers().get(i).getFirstName() + ", " + getPassengers().get(i).getAge();
         }
         return passengersLimited;
     }
@@ -43,7 +44,7 @@ public interface Airline extends Serializable {
      * Gets an array list of the passengers are on the flight
      * @return An array list of the passengers
      */
-    ArrayList getPassengers();
+    ArrayList<Passenger> getPassengers();
 
     /**
      * Adds a passenger to the passenger array

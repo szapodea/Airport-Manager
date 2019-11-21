@@ -37,7 +37,7 @@ public class Delta implements Airline {
     }
 
     @Override
-    public ArrayList getPassengers() {
+    public ArrayList<Passenger> getPassengers() {
         return passengers;
     }
 
