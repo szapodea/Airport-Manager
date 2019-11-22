@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
+import java.util.Objects;
 
 /**
  * Connects to the Server and allows the user to book tickets using a GUI.
@@ -52,15 +53,18 @@ public class ReservationClient {
                     JPanel middlePanel = new JPanel();
                     JPanel bottomPanel = new JPanel();
 
-                    JLabel topLabel = new JLabel("Welcome to the Purdue University " +
-                            "Airline Reservation Management System!"); //top label initializes with welcome text
-                    JLabel middleLabel = new JLabel();
+                    JLabel topLabel = new JLabel("<html><b>Welcome to the Purdue University " +
+                            "Airline Reservation Management System!</b></html>"); //initialize with welcome text
+                    Airline airline = new Delta();
+                    JLabel middleLabel = new JLabel(airline.getDescription());
                     JLabel logoLabel = new JLabel(new ImageIcon(logo));
 
                     JButton exitButton = new JButton("Exit");
                     JButton bookFlightButton = new JButton("Book a flight");;
                     JButton confirmBookFlightButton = new JButton("Yes, I want to book a flight.");
                     JButton chooseFlightButton = new JButton("Choose this flight");
+                    String[] flights = {"Delta", "Southwest", "Alaska"};
+                    JComboBox<String> chooseFlightComboBox = new JComboBox<>(flights);
 
                     //add starting items to the panels
                     topPanel.add(topLabel, BorderLayout.CENTER);
@@ -80,7 +84,7 @@ public class ReservationClient {
                         bottomPanel.remove(bookFlightButton);
 
                         //confirm book flight text
-                        topLabel.setText("Do you want to book a flight today?");
+                        topLabel.setText("<html><b>Do you want to book a flight today?</b></html>");
 
                         //add a confirmation button
                         bottomPanel.add(confirmBookFlightButton);
@@ -95,10 +99,31 @@ public class ReservationClient {
                         bottomPanel.remove(confirmBookFlightButton);
 
                         //choose flight text
-                        topLabel.setText("Choose a flight from the drop down menu.");
+                        topLabel.setText("<html><b>Choose a flight from the drop down menu.</b></html>");
 
+                        //add flights
+                        middlePanel.add(chooseFlightComboBox, BorderLayout.CENTER);
+                        middlePanel.add(middleLabel, BorderLayout.CENTER);
 
+                        //refresh the frame
+                        frame.repaint();
+                    });
 
+                    chooseFlightComboBox.addActionListener(actionEvent -> {
+                        Airline selectedAirline = new Delta();
+                        switch (Objects.requireNonNull((String) chooseFlightComboBox.getSelectedItem())) {
+                            case "Delta":
+                                selectedAirline = new Delta();
+                                break;
+                            case "Southwest":
+                                selectedAirline = new Southwest();
+                                break;
+                            case "Alaska":
+                                selectedAirline = new Alaska();
+                                break;
+                        }
+                        middleLabel.setText(selectedAirline.getDescription());
+                        frame.repaint();
                     });
 
                     //frame setup

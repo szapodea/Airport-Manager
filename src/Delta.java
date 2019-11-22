@@ -29,11 +29,11 @@ public class Delta implements Airline {
 
     @Override
     public String getDescription() {
-        return "Delta Airlines is proud to be one of the five premier Airlines at Purdue University.\n" +
-                "We are offer extremely exceptional services, with free limited WiFi for all customers.\n" +
-                "Passengers who use T-Mobile as a cell phone carrier get addition benefits.\n" +
-                "We are also happy to offer power outlets in each seat for passenger use.\n" +
-                "We hope you choose to fly Delta as your next Airline.";
+        return "<html>Delta Airlines is proud to be one of the five premier Airlines at Purdue University.<br/>" +
+                "We are offer extremely exceptional services, with free limited WiFi for all customers.<br/>" +
+                "Passengers who use T-Mobile as a cell phone carrier get addition benefits.<br/>" +
+                "We are also happy to offer power outlets in each seat for passenger use.<br/>" +
+                "We hope you choose to fly Delta as your next Airline.</html>";
     }
 
     @Override
