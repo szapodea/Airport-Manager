@@ -19,6 +19,7 @@ public class ReservationClient {
      * @param args Arguments for the client
      */
     public static void main(String[] args) {
+        //variables for the server
         BufferedWriter socketWriter;
         BufferedReader socketReader;
         String hostname;
@@ -45,8 +46,70 @@ public class ReservationClient {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
+                    //variables for the GUI
                     JFrame frame = new JFrame("Purdue University Flight Registration System");
-                    welcomeSetup(frame, logo);
+                    JPanel topPanel = new JPanel();
+                    JPanel middlePanel = new JPanel();
+                    JPanel bottomPanel = new JPanel();
+
+                    JLabel topLabel = new JLabel("Welcome to the Purdue University " +
+                            "Airline Reservation Management System!"); //top label initializes with welcome text
+                    JLabel middleLabel = new JLabel();
+                    JLabel logoLabel = new JLabel(new ImageIcon(logo));
+
+                    JButton exitButton = new JButton("Exit");
+                    JButton bookFlightButton = new JButton("Book a flight");;
+                    JButton confirmBookFlightButton = new JButton("Yes, I want to book a flight.");
+                    JButton chooseFlightButton = new JButton("Choose this flight");
+
+                    //add starting items to the panels
+                    topPanel.add(topLabel, BorderLayout.CENTER);
+                    middlePanel.add(logoLabel);
+                    bottomPanel.add(exitButton);
+                    bottomPanel.add(bookFlightButton);
+
+                    //exit button action listener
+                    exitButton.addActionListener(actionEvent -> {
+                        frame.dispose();
+                    });;
+
+                    //book flight button action listener
+                    bookFlightButton.addActionListener(actionEvent -> {
+                        //remove some frame items
+                        middlePanel.remove(logoLabel);
+                        bottomPanel.remove(bookFlightButton);
+
+                        //confirm book flight text
+                        topLabel.setText("Do you want to book a flight today?");
+
+                        //add a confirmation button
+                        bottomPanel.add(confirmBookFlightButton);
+
+                        //refresh the frame
+                        frame.repaint();
+                    });
+
+                    //confirm book flight action listener
+                    confirmBookFlightButton.addActionListener(actionEvent -> {
+                        //remove some frame items
+                        bottomPanel.remove(confirmBookFlightButton);
+
+                        //choose flight text
+                        topLabel.setText("Choose a flight from the drop down menu.");
+
+
+
+                    });
+
+                    //frame setup
+                    frame.add(topPanel, BorderLayout.NORTH);
+                    frame.add(middlePanel, BorderLayout.CENTER);
+                    frame.add(bottomPanel, BorderLayout.SOUTH);
+                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setResizable(false);
+                    frame.setSize(600, 400);
+                    frame.setLocationRelativeTo(null);
+                    frame.setVisible(true);
                 }
             });
         } catch (IOException e) {
@@ -92,49 +155,5 @@ public class ReservationClient {
             System.exit(0);
         }
         return port;
-    }
-
-    /**
-     * Initializes the frame with welcome text, a logo, and buttons
-     * @param frame The frame to initialize
-     * @param logo BufferedImage logo to display
-     */
-    private static void welcomeSetup(JFrame frame, BufferedImage logo) {
-        //welcome text
-        JPanel topText = new JPanel();
-        topText.add(new JLabel("Welcome to the Purdue University " +
-                "Airline Reservation Management System!"), BorderLayout.CENTER);
-        frame.add(topText, BorderLayout.NORTH);
-
-        //logo
-        JLabel logoLabel = new JLabel(new ImageIcon(logo));
-        frame.add(new JLabel(new ImageIcon(logo)), BorderLayout.CENTER);
-
-        //buttons
-        JPanel buttons = new JPanel();
-        //Exit button
-        JButton exitButton = new JButton("Exit");
-        exitButton.addActionListener(actionEvent -> {
-            frame.dispose();
-        });
-        buttons.add(exitButton);
-        //Book flight button
-        JButton bookFlightButton = new JButton("Book a flight");
-        bookFlightButton.addActionListener(actionEvent -> {
-            bookFlight(frame);
-        });
-        buttons.add(bookFlightButton);
-        frame.add(buttons, BorderLayout.SOUTH);
-
-        //frame setup
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setSize(600, 400);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
-
-    private static void bookFlight(JFrame frame) {
-
     }
 }
