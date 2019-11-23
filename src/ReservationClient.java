@@ -1,6 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
@@ -47,24 +50,38 @@ public class ReservationClient {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    //variables for the GUI
+                    //JFrame and JPanels
                     JFrame frame = new JFrame("Purdue University Flight Registration System");
                     JPanel topPanel = new JPanel();
                     JPanel middlePanel = new JPanel();
+                    middlePanel.setLayout(new BorderLayout());
                     JPanel bottomPanel = new JPanel();
 
-                    JLabel topLabel = new JLabel("<html><b>Welcome to the Purdue University " +
-                            "Airline Reservation Management System!</b></html>"); //initialize with welcome text
+                    //JLabels
+                    JPanel comboBoxJPanel = new JPanel();
+                    comboBoxJPanel.setLayout(new BorderLayout());
+                    comboBoxJPanel.add(new JLabel("                                                   " +
+                            "                     "), BorderLayout.EAST); //padding east
+                    comboBoxJPanel.add(new JLabel("                                                   " +
+                            "                     "), BorderLayout.WEST); //padding west
+                    JLabel topLabel = new JLabel("<html>Welcome to the Purdue University " +
+                            "Airline Reservation Management System!</html>");
                     Airline airline = new Delta();
-                    JLabel middleLabel = new JLabel(airline.getDescription());
+                    JLabel middleLabel = new JLabel(airline.getDescription(), SwingConstants.CENTER);
                     JLabel logoLabel = new JLabel(new ImageIcon(logo));
 
+                    //set fonts
+                    topLabel.setFont(new Font("Arial", Font.BOLD, 16));
+                    middleLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+
+                    //JButtons
                     JButton exitButton = new JButton("Exit");
                     JButton bookFlightButton = new JButton("Book a flight");;
                     JButton confirmBookFlightButton = new JButton("Yes, I want to book a flight.");
                     JButton chooseFlightButton = new JButton("Choose this flight");
                     String[] flights = {"Delta", "Southwest", "Alaska"};
                     JComboBox<String> chooseFlightComboBox = new JComboBox<>(flights);
+                    comboBoxJPanel.add(chooseFlightComboBox, BorderLayout.CENTER);
 
                     //add starting items to the panels
                     topPanel.add(topLabel, BorderLayout.CENTER);
@@ -72,19 +89,29 @@ public class ReservationClient {
                     bottomPanel.add(exitButton);
                     bottomPanel.add(bookFlightButton);
 
-                    //exit button action listener
+                    //key listener for backslash
+                    KeyAdapter backslashListener = new KeyAdapter() {
+                        @Override
+                        public void keyPressed(KeyEvent e) {
+                            if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
+
+                            }
+                        }
+                    };
+
+                    //removes the frame if the exit button is pressed
                     exitButton.addActionListener(actionEvent -> {
                         frame.dispose();
-                    });;
+                    });
 
-                    //book flight button action listener
+                    //Confirms that the user wants to book a flight
                     bookFlightButton.addActionListener(actionEvent -> {
                         //remove some frame items
                         middlePanel.remove(logoLabel);
                         bottomPanel.remove(bookFlightButton);
 
-                        //confirm book flight text
-                        topLabel.setText("<html><b>Do you want to book a flight today?</b></html>");
+                        //add confirm book flight text
+                        topLabel.setText("<html>Do you want to book a flight today?</html>");
 
                         //add a confirmation button
                         bottomPanel.add(confirmBookFlightButton);
@@ -93,22 +120,29 @@ public class ReservationClient {
                         frame.repaint();
                     });
 
-                    //confirm book flight action listener
+                    //prompts the user to choose a flight
                     confirmBookFlightButton.addActionListener(actionEvent -> {
                         //remove some frame items
                         bottomPanel.remove(confirmBookFlightButton);
 
-                        //choose flight text
-                        topLabel.setText("<html><b>Choose a flight from the drop down menu.</b></html>");
+                        //add listener for backslash
+                        frame.addKeyListener(backslashListener);
+
+                        //add choose flight text
+                        topLabel.setText("<html>Choose a flight from the drop down menu.</html>");
 
                         //add flights
-                        middlePanel.add(chooseFlightComboBox, BorderLayout.CENTER);
+                        middlePanel.add(comboBoxJPanel, BorderLayout.NORTH);
                         middlePanel.add(middleLabel, BorderLayout.CENTER);
+
+                        //add choose flight button
+                        bottomPanel.add(chooseFlightButton);
 
                         //refresh the frame
                         frame.repaint();
                     });
 
+                    //changes the description for the chosen flight
                     chooseFlightComboBox.addActionListener(actionEvent -> {
                         Airline selectedAirline = new Delta();
                         switch (Objects.requireNonNull((String) chooseFlightComboBox.getSelectedItem())) {
@@ -126,13 +160,21 @@ public class ReservationClient {
                         frame.repaint();
                     });
 
+                    //
+                    chooseFlightButton.addActionListener(actionEvent -> {
+                        //remove some frame items
+                        frame.removeKeyListener(backslashListener);
+                    });
+
                     //frame setup
+                    frame.setFocusable(true);
+                    frame.setLayout(new BorderLayout());
                     frame.add(topPanel, BorderLayout.NORTH);
                     frame.add(middlePanel, BorderLayout.CENTER);
                     frame.add(bottomPanel, BorderLayout.SOUTH);
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     frame.setResizable(false);
-                    frame.setSize(600, 400);
+                    frame.setSize(700, 400);
                     frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
                 }

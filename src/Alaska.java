@@ -29,13 +29,13 @@ public class Alaska implements Airline {
 
     @Override
     public String getDescription() {
-        return "<html>Alaska Airlines is proud to serve the strong and " +
+        return "<html><center>Alaska Airlines is proud to serve the strong and " +
                 "knowledgeable Boilermakers from Purdue University.<br/>" +
                 "We primarily fly westward, and often have stops in Alaska and California.<br/>" +
                 "We have first class amenities, even in coach class.<br/>" +
                 "We provide fun snacks, such as pretzels and goldfish.<br/>" +
                 "We also have comfortable seats, and free WiFi.<br/>" +
-                "We hope you choose Alaska Airlines for your next itinerary.</html>";
+                "We hope you choose Alaska Airlines for your next itinerary.</center></html>";
     }
 
     @Override
