@@ -28,16 +28,24 @@ public interface Airline extends Serializable {
     String getDescription();
 
     /**
+     * Gets the max capacity of the airline
+     * @return The airline's max capacity
+     */
+    int getCapacity();
+
+    /**
      * Gets an array of the passengers limited information that are on the flight
      * @return The passengers names in the format "last initial. first, age"
      */
-    default String[] getPassengersLimited() {
-        String[] passengersLimited = new String[getPassengers().size()];
-        for (int i = 0; i < passengersLimited.length; i++) {
-            passengersLimited[i] = getPassengers().get(i).getLastName().charAt(i) + ". " +
-                    getPassengers().get(i).getFirstName() + ", " + getPassengers().get(i).getAge();
+    default String getPassengersLimited() {
+        StringBuilder passengersLimited = new StringBuilder("<html>");
+        for (int i = 0; i < getPassengers().size(); i++) {
+            passengersLimited.append(getPassengers().get(i).getLastName().charAt(0)).append(". ").
+                    append(getPassengers().get(i).getFirstName()).append(", ").
+                    append(getPassengers().get(i).getAge()).append("<br/>");
         }
-        return passengersLimited;
+        passengersLimited.append("</html>");
+        return passengersLimited.toString();
     }
 
     /**

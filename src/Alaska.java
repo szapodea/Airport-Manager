@@ -39,6 +39,11 @@ public class Alaska implements Airline {
     }
 
     @Override
+    public int getCapacity() {
+        return 100;
+    }
+
+    @Override
     public ArrayList<Passenger> getPassengers() {
         return passengers;
     }

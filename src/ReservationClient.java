@@ -18,14 +18,16 @@ import java.util.Objects;
  */
 
 public class ReservationClient {
+    private static Airline selectedAirline;
+
     /**
      * Main method to start the client
      * @param args Arguments for the client
      */
     public static void main(String[] args) {
         //variables for the server
-        BufferedWriter socketWriter;
-        BufferedReader socketReader;
+        ObjectOutputStream socketWriter;
+        ObjectInputStream socketReader;
         String hostname;
         int port;
         Socket socket;
@@ -38,10 +40,30 @@ public class ReservationClient {
 
         //Connect to the server and display the GUI
         try {
+            //server communication commented until server is complete
             //server connection
 //            socket = new Socket(hostname, port);
-//            socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//            socketWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+//            socketReader = new ObjectInputStream(socket.getInputStream());
+//            socketWriter = new ObjectOutputStream(socket.getOutputStream());
+
+            //get the airlines from the server
+//            Delta delta = (Delta) socketReader.readObject();
+//            Alaska alaska = (Alaska) socketReader.readObject();
+//            Southwest southwest = (Southwest) socketReader.readObject();
+
+            //temp airlines until server is complete
+            Delta delta = new Delta();
+            for (int i = 0; i < 143; i++) {
+                delta.addPassenger(new Passenger("delta","delta",i));
+            }
+            Alaska alaska = new Alaska();
+            for (int i = 0; i < 56; i++) {
+                alaska.addPassenger(new Passenger("alaska","alaska",i));
+            }
+            Southwest southwest = new Southwest();
+            for (int i = 0; i < 87; i++) {
+                southwest.addPassenger(new Passenger("southwest","southwest",i));
+            }
 
             //load image
             BufferedImage logo = ImageIO.read(new File("logo.png"));
@@ -66,8 +88,8 @@ public class ReservationClient {
                             "                     "), BorderLayout.WEST); //padding west
                     JLabel topLabel = new JLabel("<html>Welcome to the Purdue University " +
                             "Airline Reservation Management System!</html>");
-                    Airline airline = new Delta();
-                    JLabel middleLabel = new JLabel(airline.getDescription(), SwingConstants.CENTER);
+                    selectedAirline = delta; //set selected airline to delta by default
+                    JLabel middleLabel = new JLabel(selectedAirline.getDescription(), SwingConstants.CENTER);
                     JLabel logoLabel = new JLabel(new ImageIcon(logo));
 
                     //set fonts
@@ -89,13 +111,35 @@ public class ReservationClient {
                     bottomPanel.add(exitButton);
                     bottomPanel.add(bookFlightButton);
 
-                    //key listener for backslash
+                    //shows passenger info on backslash press
                     KeyAdapter backslashListener = new KeyAdapter() {
                         @Override
                         public void keyPressed(KeyEvent e) {
-                            if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
-
-                            }
+                        if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
+                            JFrame info = new JFrame();
+                            //top text
+                            info.add(new JLabel(selectedAirline.getName() + ". " +
+                                    selectedAirline.getPassengers().size() + " : " + selectedAirline.getCapacity()),
+                                    BorderLayout.NORTH);
+                            //passenger limited info
+                            JPanel passengerText = new JPanel();
+                            passengerText.add(new JLabel(selectedAirline.getPassengersLimited()), BorderLayout.CENTER);
+                            info.add(new JScrollPane(passengerText), BorderLayout.CENTER);
+                            //exit button
+                            JPanel exitPanel = new JPanel();
+                            JButton exit = new JButton("Exit");
+                            exit.addActionListener(actionEvent -> {
+                                info.dispose();
+                            });
+                            exitPanel.add(exit);
+                            info.add(exitPanel, BorderLayout.SOUTH);
+                            //frame setup
+                            info.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            info.setResizable(false);
+                            info.setSize(300, 200);
+                            info.setLocationRelativeTo(null);
+                            info.setVisible(true);
+                        }
                         }
                     };
 
@@ -144,16 +188,15 @@ public class ReservationClient {
 
                     //changes the description for the chosen flight
                     chooseFlightComboBox.addActionListener(actionEvent -> {
-                        Airline selectedAirline = new Delta();
                         switch (Objects.requireNonNull((String) chooseFlightComboBox.getSelectedItem())) {
                             case "Delta":
-                                selectedAirline = new Delta();
+                                selectedAirline = delta;
                                 break;
                             case "Southwest":
-                                selectedAirline = new Southwest();
+                                selectedAirline = southwest;
                                 break;
                             case "Alaska":
-                                selectedAirline = new Alaska();
+                                selectedAirline = alaska;
                                 break;
                         }
                         middleLabel.setText(selectedAirline.getDescription());
@@ -187,7 +230,10 @@ public class ReservationClient {
                 JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
+        }// catch (ClassNotFoundException e) { //catch is commented until server completed
+//            JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
+//                    "Connection error", JOptionPane.ERROR_MESSAGE);
+//        }
     }
 
     /**

@@ -36,6 +36,10 @@ public class Southwest implements Airline {
                 "We hope you choose Southwest for your next flight.</center><html>";
     }
 
+    @Override
+    public int getCapacity() {
+        return 100;
+    }
 
     @Override
     public ArrayList<Passenger> getPassengers() {
