@@ -17,14 +17,14 @@ public class BoardingPass {
         this.airline = airline;
     }
 
-    public void printInfo() {
-        System.out.println("--------------------------------------------------------------------");
-        System.out.printf("BOARDING PASS for FLIGHT 18000 WITH %s \n", airline.getName());
-        System.out.printf("PASSENGER FIRST NAME: %s \n", passenger.getFirstName());
-        System.out.printf("PASSENGER LAST NAME: %s \n", passenger.getLastName());
-        System.out.printf("PASSENGER AGE: %d \n", passenger.getAge());
-        System.out.printf("You can now begin boarding at gate %s \n", gate.getGate());
-        System.out.println("--------------------------------------------------------------------");
+    public String printInfo() {
+        return ("<html>--------------------------------------------------------------------") +
+        String.format("<br/>BOARDING PASS FOR FLIGHT 18000 WITH %s <br/>", airline.getName()) +
+        String.format("PASSENGER FIRST NAME: %s <br/>", passenger.getFirstName()) +
+        String.format("PASSENGER LAST NAME: %s <br/>", passenger.getLastName()) +
+        String.format("PASSENGER AGE: %d <br/>", passenger.getAge()) +
+        String.format("You can now begin boarding at gate %s <br/>", gate.getGate()) +
+        ("--------------------------------------------------------------------</html>");
 
     }
 }

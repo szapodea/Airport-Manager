@@ -19,6 +19,8 @@ import java.util.Objects;
 
 public class ReservationClient {
     private static Airline selectedAirline;
+    private static Gate gate;
+    private static BoardingPass boardingPass;
     private static Passenger passenger;
 
     /**
@@ -79,6 +81,8 @@ public class ReservationClient {
                     JPanel middlePanel = new JPanel();
                     middlePanel.setLayout(new BorderLayout());
                     JPanel bottomPanel = new JPanel();
+                    bottomPanel.setLayout(new BorderLayout());
+                    JPanel buttonPanel = new JPanel();
 
                     //JLabels
                     JPanel comboBoxJPanel = new JPanel();
@@ -108,6 +112,7 @@ public class ReservationClient {
                     JButton confirmFlightButton = new JButton("Yes, I want this flight");
                     JButton submitButton = new JButton("Next");
                     JButton yesConfirmInfoButton = new JButton("Yes");
+                    JButton refreshButton = new JButton("Refresh Flight Status");
 
                     //JTextFields
                     JTextArea firstName = new JTextArea(1, 50);
@@ -117,8 +122,9 @@ public class ReservationClient {
                     //add starting items to the panels
                     topPanel.add(topLabel, BorderLayout.CENTER);
                     middlePanel.add(logoLabel);
-                    bottomPanel.add(exitButton);
-                    bottomPanel.add(bookFlightButton);
+                    bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
+                    buttonPanel.add(exitButton);
+                    buttonPanel.add(bookFlightButton);
 
                     //shows passenger info on backslash press
                     KeyAdapter backslashListener = new KeyAdapter() {
@@ -127,12 +133,14 @@ public class ReservationClient {
                             if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
                                 JFrame info = new JFrame();
                                 //top text
-                                info.add(new JLabel(selectedAirline.getName() + ". " +
-                                                selectedAirline.getPassengers().size() + " : " + selectedAirline.getCapacity()),
+                                info.add(new JLabel(selectedAirline.getName() + ". Capacity: " +
+                                                selectedAirline.getPassengers().size() + "/"
+                                                + selectedAirline.getCapacity() + " Passengers"),
                                         BorderLayout.NORTH);
                                 //passenger limited info
                                 JPanel passengerText = new JPanel();
-                                passengerText.add(new JLabel(selectedAirline.getPassengersLimited()), BorderLayout.CENTER);
+                                passengerText.add(new JLabel(selectedAirline.getPassengersLimited()),
+                                        BorderLayout.CENTER);
                                 info.add(new JScrollPane(passengerText), BorderLayout.CENTER);
                                 //exit button
                                 JPanel exitPanel = new JPanel();
@@ -142,10 +150,21 @@ public class ReservationClient {
                                 });
                                 exitPanel.add(exit);
                                 info.add(exitPanel, BorderLayout.SOUTH);
+                                //add listener for ESC pressed
+                                info.addKeyListener(new KeyAdapter() {
+                                    @Override
+                                    public void keyPressed(KeyEvent e) {
+                                        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                                            info.dispose();
+                                        }
+                                    }
+                                });
+
                                 //frame setup
                                 info.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                info.setFocusable(true);
                                 info.setResizable(false);
-                                info.setSize(300, 200);
+                                info.setSize(350, 200);
                                 info.setLocationRelativeTo(null);
                                 info.setVisible(true);
                             }
@@ -161,14 +180,14 @@ public class ReservationClient {
                     bookFlightButton.addActionListener(actionEvent -> {
                         //remove some frame items
                         middlePanel.remove(logoLabel);
-                        bottomPanel.remove(bookFlightButton);
+                        buttonPanel.remove(bookFlightButton);
 
                         //add confirm book flight text
                         topLabel.setText("<html>Do you want to book a flight today?</html>");
 
                         //add a confirmation button
                         goToChooseFlightButton.setText("Yes, I want to book a flight.");
-                        bottomPanel.add(goToChooseFlightButton);
+                        buttonPanel.add(goToChooseFlightButton);
 
                         //refresh the frame
                         frame.repaint();
@@ -177,11 +196,11 @@ public class ReservationClient {
                     //prompts the user to choose a flight
                     goToChooseFlightButton.addActionListener(actionEvent -> {
                         //remove some frame items
-                        bottomPanel.remove(goToChooseFlightButton);
+                        buttonPanel.remove(goToChooseFlightButton);
 
                         //these items are for if the user comes to this screen from the confirm screen
                         middlePanel.removeAll();
-                        bottomPanel.remove(confirmFlightButton);
+                        buttonPanel.remove(confirmFlightButton);
 
                         //add listener for backslash
                         frame.addKeyListener(backslashListener);
@@ -194,7 +213,7 @@ public class ReservationClient {
                         middlePanel.add(middleLabel, BorderLayout.CENTER);
 
                         //add choose flight button
-                        bottomPanel.add(chooseFlightButton);
+                        buttonPanel.add(chooseFlightButton);
 
                         //refresh the frame
                         frame.repaint();
@@ -221,7 +240,7 @@ public class ReservationClient {
                     chooseFlightButton.addActionListener(actionEvent -> {
                         //remove some frame items
                         middlePanel.removeAll();
-                        bottomPanel.remove(chooseFlightButton);
+                        buttonPanel.remove(chooseFlightButton);
 
                         //set the top text
                         topLabel.setText("<html>Are you sure you want to book a flight on <br/>" +
@@ -229,8 +248,8 @@ public class ReservationClient {
 
                         //add confirmation buttons
                         goToChooseFlightButton.setText("No, I want a different flight.");
-                        bottomPanel.add(goToChooseFlightButton);
-                        bottomPanel.add(confirmFlightButton);
+                        buttonPanel.add(goToChooseFlightButton);
+                        buttonPanel.add(confirmFlightButton);
 
                     });
 
@@ -238,8 +257,8 @@ public class ReservationClient {
                     confirmFlightButton.addActionListener(actionEvent -> {
                         //remove some frame items
                         frame.removeKeyListener(backslashListener);
-                        bottomPanel.remove(goToChooseFlightButton);
-                        bottomPanel.remove(confirmFlightButton);
+                        buttonPanel.remove(goToChooseFlightButton);
+                        buttonPanel.remove(confirmFlightButton);
                         middlePanel.removeAll();
 
                         //change top text
@@ -256,7 +275,7 @@ public class ReservationClient {
                         middlePanel.add(age);
 
                         //add the submit button
-                        bottomPanel.add(submitButton);
+                        buttonPanel.add(submitButton);
 
                         //refresh the frame
                         frame.repaint();
@@ -289,8 +308,9 @@ public class ReservationClient {
                                 JFrame confirm = new JFrame("Confirm Info");
 
                                 //text to display to confirm their information
-                                JLabel confirmText = new JLabel("<html>Are all the details you entered correct?<br/>" +
-                                        "The passenger's name is " + firstName.getText() + " " + lastName.getText() + " and" +
+                                JLabel confirmText = new JLabel("<html>Are all the details you entered correct?" +
+                                        "<br/>The passenger's name is " + firstName.getText() + " "
+                                        + lastName.getText() + " and " +
                                         "their age is " + age.getText() + ".<br/>" +
                                         "If all the information shown is correct, select the Yes<br/>" +
                                         "button below, otherwise, select the No button.");
@@ -330,7 +350,41 @@ public class ReservationClient {
 
                     //books the flight and shows flight info
                     yesConfirmInfoButton.addActionListener(actionEvent -> {
+                        //create the passenger, boarding pass, and gate
+                        passenger = new Passenger(firstName.getText(), lastName.getText(),
+                                Integer.parseInt(age.getText()));
+                        gate = new Gate(selectedAirline.getTerminal());
+                        boardingPass = new BoardingPass(passenger, gate, selectedAirline);
+                        selectedAirline.addPassenger(passenger);
 
+                        //remove some frame items
+                        middlePanel.removeAll();
+                        buttonPanel.remove(submitButton);
+
+                        //set middlePanel's layout
+                        middlePanel.setLayout(new BorderLayout());
+
+                        //set the top text
+                        topLabel.setText("<html>Flight data displaying for " + selectedAirline.getName() +
+                                "<br/>Enjoy your flight!<br/>" +
+                                "Flight is now boarding at " + gate.getGate());
+
+                        //show passenger limited information
+                        String info = "<html>Capacity: " + selectedAirline.getPassengers().size() + "/" +
+                                selectedAirline.getCapacity() + " Passengers<br/>" +
+                                selectedAirline.getPassengersLimited().substring(6); //substring to remove html tag
+                        //magic that adds the scrollable panel (do not change this, hours have already been wasted)
+                        middlePanel.add(new JLabel(info), BorderLayout.CENTER);
+                        frame.add(new JScrollPane(middlePanel), BorderLayout.CENTER);
+
+                        //show boarding pass
+                        bottomPanel.add(new JLabel(boardingPass.printInfo()), BorderLayout.NORTH);
+
+                        //add refresh button
+                        buttonPanel.add(refreshButton);
+
+                        //refresh the frame
+                        frame.repaint();
                     });
 
                     //frame setup

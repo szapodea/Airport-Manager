@@ -49,6 +49,6 @@ public class Delta implements Airline {
 
     @Override
     public void addPassenger(Passenger passenger) {
-        passengers.add(passenger);
+        passengers.add(0, passenger);
     }
 }
