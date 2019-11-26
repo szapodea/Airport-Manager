@@ -19,6 +19,7 @@ import java.util.Objects;
 
 public class ReservationClient {
     private static Airline selectedAirline;
+    private static Passenger passenger;
 
     /**
      * Main method to start the client
@@ -98,12 +99,20 @@ public class ReservationClient {
 
                     //JButtons
                     JButton exitButton = new JButton("Exit");
-                    JButton bookFlightButton = new JButton("Book a flight");;
-                    JButton confirmBookFlightButton = new JButton("Yes, I want to book a flight.");
+                    JButton bookFlightButton = new JButton("Book a flight");
+                    JButton goToChooseFlightButton = new JButton();
                     JButton chooseFlightButton = new JButton("Choose this flight");
                     String[] flights = {"Delta", "Southwest", "Alaska"};
                     JComboBox<String> chooseFlightComboBox = new JComboBox<>(flights);
                     comboBoxJPanel.add(chooseFlightComboBox, BorderLayout.CENTER);
+                    JButton confirmFlightButton = new JButton("Yes, I want this flight");
+                    JButton submitButton = new JButton("Next");
+                    JButton yesConfirmInfoButton = new JButton("Yes");
+
+                    //JTextFields
+                    JTextArea firstName = new JTextArea(1, 50);
+                    JTextArea lastName = new JTextArea(1, 50 );
+                    JTextArea age = new JTextArea(1, 50);
 
                     //add starting items to the panels
                     topPanel.add(topLabel, BorderLayout.CENTER);
@@ -115,31 +124,31 @@ public class ReservationClient {
                     KeyAdapter backslashListener = new KeyAdapter() {
                         @Override
                         public void keyPressed(KeyEvent e) {
-                        if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
-                            JFrame info = new JFrame();
-                            //top text
-                            info.add(new JLabel(selectedAirline.getName() + ". " +
-                                    selectedAirline.getPassengers().size() + " : " + selectedAirline.getCapacity()),
-                                    BorderLayout.NORTH);
-                            //passenger limited info
-                            JPanel passengerText = new JPanel();
-                            passengerText.add(new JLabel(selectedAirline.getPassengersLimited()), BorderLayout.CENTER);
-                            info.add(new JScrollPane(passengerText), BorderLayout.CENTER);
-                            //exit button
-                            JPanel exitPanel = new JPanel();
-                            JButton exit = new JButton("Exit");
-                            exit.addActionListener(actionEvent -> {
-                                info.dispose();
-                            });
-                            exitPanel.add(exit);
-                            info.add(exitPanel, BorderLayout.SOUTH);
-                            //frame setup
-                            info.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                            info.setResizable(false);
-                            info.setSize(300, 200);
-                            info.setLocationRelativeTo(null);
-                            info.setVisible(true);
-                        }
+                            if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
+                                JFrame info = new JFrame();
+                                //top text
+                                info.add(new JLabel(selectedAirline.getName() + ". " +
+                                                selectedAirline.getPassengers().size() + " : " + selectedAirline.getCapacity()),
+                                        BorderLayout.NORTH);
+                                //passenger limited info
+                                JPanel passengerText = new JPanel();
+                                passengerText.add(new JLabel(selectedAirline.getPassengersLimited()), BorderLayout.CENTER);
+                                info.add(new JScrollPane(passengerText), BorderLayout.CENTER);
+                                //exit button
+                                JPanel exitPanel = new JPanel();
+                                JButton exit = new JButton("Exit");
+                                exit.addActionListener(actionEvent -> {
+                                    info.dispose();
+                                });
+                                exitPanel.add(exit);
+                                info.add(exitPanel, BorderLayout.SOUTH);
+                                //frame setup
+                                info.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                info.setResizable(false);
+                                info.setSize(300, 200);
+                                info.setLocationRelativeTo(null);
+                                info.setVisible(true);
+                            }
                         }
                     };
 
@@ -158,16 +167,21 @@ public class ReservationClient {
                         topLabel.setText("<html>Do you want to book a flight today?</html>");
 
                         //add a confirmation button
-                        bottomPanel.add(confirmBookFlightButton);
+                        goToChooseFlightButton.setText("Yes, I want to book a flight.");
+                        bottomPanel.add(goToChooseFlightButton);
 
                         //refresh the frame
                         frame.repaint();
                     });
 
                     //prompts the user to choose a flight
-                    confirmBookFlightButton.addActionListener(actionEvent -> {
+                    goToChooseFlightButton.addActionListener(actionEvent -> {
                         //remove some frame items
-                        bottomPanel.remove(confirmBookFlightButton);
+                        bottomPanel.remove(goToChooseFlightButton);
+
+                        //these items are for if the user comes to this screen from the confirm screen
+                        middlePanel.removeAll();
+                        bottomPanel.remove(confirmFlightButton);
 
                         //add listener for backslash
                         frame.addKeyListener(backslashListener);
@@ -199,14 +213,124 @@ public class ReservationClient {
                                 selectedAirline = alaska;
                                 break;
                         }
+                        frame.requestFocus();
                         middleLabel.setText(selectedAirline.getDescription());
                         frame.repaint();
                     });
 
-                    //
                     chooseFlightButton.addActionListener(actionEvent -> {
                         //remove some frame items
+                        middlePanel.removeAll();
+                        bottomPanel.remove(chooseFlightButton);
+
+                        //set the top text
+                        topLabel.setText("<html>Are you sure you want to book a flight on <br/>" +
+                                selectedAirline.getName() + "?</html>");
+
+                        //add confirmation buttons
+                        goToChooseFlightButton.setText("No, I want a different flight.");
+                        bottomPanel.add(goToChooseFlightButton);
+                        bottomPanel.add(confirmFlightButton);
+
+                    });
+
+                    //prompts the user to input their information
+                    confirmFlightButton.addActionListener(actionEvent -> {
+                        //remove some frame items
                         frame.removeKeyListener(backslashListener);
+                        bottomPanel.remove(goToChooseFlightButton);
+                        bottomPanel.remove(confirmFlightButton);
+                        middlePanel.removeAll();
+
+                        //change top text
+                        topLabel.setText("<html>Please input your information below.</html>");
+
+                        middlePanel.setLayout(new FlowLayout());
+
+                        //add fields to input
+                        middlePanel.add(new JLabel("<html>What is your first name?</html>"));
+                        middlePanel.add(firstName);
+                        middlePanel.add(new JLabel("<html><br/>What is your last name?</html>"));
+                        middlePanel.add(lastName);
+                        middlePanel.add(new JLabel("<html><br/>What is your age?</html>"));
+                        middlePanel.add(age);
+
+                        //add the submit button
+                        bottomPanel.add(submitButton);
+
+                        //refresh the frame
+                        frame.repaint();
+                    });
+
+                    //asks the user if their information is correct
+                    submitButton.addActionListener(actionEvent -> {
+                        try {
+                            //confirm the age is a positive integer
+                            if (Integer.parseInt(age.getText()) < 0) {
+                                throw new NumberFormatException();
+                            }
+
+                            //confirm first and last name have no special chars
+                            boolean validNames = true;
+                            for (int i = 0; i < firstName.getText().length(); i++) {
+                                if (!(Character.isAlphabetic(firstName.getText().charAt(i)) ||
+                                        firstName.getText().charAt(i) == '-')) {
+                                    validNames = false;
+                                }
+                            }
+                            for (int i = 0; i < lastName.getText().length(); i++) {
+                                if (!(Character.isAlphabetic(lastName.getText().charAt(i)) ||
+                                        lastName.getText().charAt(i) == '-')) {
+                                    validNames = false;
+                                }
+                            }
+
+                            if (validNames) {
+                                JFrame confirm = new JFrame("Confirm Info");
+
+                                //text to display to confirm their information
+                                JLabel confirmText = new JLabel("<html>Are all the details you entered correct?<br/>" +
+                                        "The passenger's name is " + firstName.getText() + " " + lastName.getText() + " and" +
+                                        "their age is " + age.getText() + ".<br/>" +
+                                        "If all the information shown is correct, select the Yes<br/>" +
+                                        "button below, otherwise, select the No button.");
+
+                                //Yes/No buttons
+                                JPanel confirmButtons = new JPanel();
+                                JButton noConfirmButton = new JButton("No");
+                                confirmButtons.add(noConfirmButton);
+                                confirmButtons.add(yesConfirmInfoButton);
+
+                                //remove this frame on button press
+                                noConfirmButton.addActionListener(actionEvent1 -> {
+                                    confirm.dispose();
+                                });
+                                yesConfirmInfoButton.addActionListener(actionEvent1 -> {
+                                    confirm.dispose();
+                                });
+
+                                //setup the frame
+                                confirm.add(confirmText, BorderLayout.CENTER);
+                                confirm.add(confirmButtons, BorderLayout.SOUTH);
+                                confirm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                confirm.setResizable(false);
+                                confirm.setSize(500, 200);
+                                confirm.setLocationRelativeTo(null);
+                                confirm.setVisible(true);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Please use only" +
+                                        " letters or dashes for the name.",
+                                        "Invalid age", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Please input a positive" +
+                                    " integer for the age.", "Invalid age", JOptionPane.ERROR_MESSAGE);
+                        }
+                    });
+
+                    //books the flight and shows flight info
+                    yesConfirmInfoButton.addActionListener(actionEvent -> {
+
                     });
 
                     //frame setup
