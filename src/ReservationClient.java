@@ -13,8 +13,15 @@ import java.util.Objects;
  * Connects to the Server and allows the user to book tickets using a GUI.
  * See the Sample Output Video for examples of how it should appear.
  *
+ * Client requests data from the server in the following way:
+ * 1. expects server to write out airlines in the order Delta, Alaska, Southwest
+ * 2. client writes the airline that was selected with exactly 1 additional passenger
+ * 3. client will write an airlines name (the same airline that was written in 2) to notify the server that it needs
+ * updated data on that airline (this is for the refresh button)
+ * 4. expects server to write out the airline object of the name that was sent with updated information
+ *
  * @author Luke Bainbridge
- * @version 11/16/19
+ * @version 11/26/19
  */
 
 public class ReservationClient {
@@ -43,30 +50,15 @@ public class ReservationClient {
 
         //Connect to the server and display the GUI
         try {
-            //server communication commented until server is complete
             //server connection
-//            socket = new Socket(hostname, port);
-//            socketReader = new ObjectInputStream(socket.getInputStream());
-//            socketWriter = new ObjectOutputStream(socket.getOutputStream());
+            socket = new Socket(hostname, port);
+            socketReader = new ObjectInputStream(socket.getInputStream());
+            socketWriter = new ObjectOutputStream(socket.getOutputStream());
 
             //get the airlines from the server
-//            Delta delta = (Delta) socketReader.readObject();
-//            Alaska alaska = (Alaska) socketReader.readObject();
-//            Southwest southwest = (Southwest) socketReader.readObject();
-
-            //temp airlines until server is complete
-            Delta delta = new Delta();
-            for (int i = 0; i < 143; i++) {
-                delta.addPassenger(new Passenger("delta","delta",i));
-            }
-            Alaska alaska = new Alaska();
-            for (int i = 0; i < 56; i++) {
-                alaska.addPassenger(new Passenger("alaska","alaska",i));
-            }
-            Southwest southwest = new Southwest();
-            for (int i = 0; i < 87; i++) {
-                southwest.addPassenger(new Passenger("southwest","southwest",i));
-            }
+            Delta delta = (Delta) socketReader.readObject();
+            Alaska alaska = (Alaska) socketReader.readObject();
+            Southwest southwest = (Southwest) socketReader.readObject();
 
             //load image
             BufferedImage logo = ImageIO.read(new File("logo.png"));
@@ -96,6 +88,7 @@ public class ReservationClient {
                     selectedAirline = delta; //set selected airline to delta by default
                     JLabel middleLabel = new JLabel(selectedAirline.getDescription(), SwingConstants.CENTER);
                     JLabel logoLabel = new JLabel(new ImageIcon(logo));
+                    JLabel passengerInfo = new JLabel();
 
                     //set fonts
                     topLabel.setFont(new Font("Arial", Font.BOLD, 16));
@@ -357,6 +350,20 @@ public class ReservationClient {
                         boardingPass = new BoardingPass(passenger, gate, selectedAirline);
                         selectedAirline.addPassenger(passenger);
 
+                        //send data to the server
+                        try {
+                            socketWriter.writeObject(selectedAirline);
+                        } catch (IOException e) {
+                            if (e.getLocalizedMessage().equals(hostname)) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Could not connect to the server.",
+                                        "Connection error", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+
                         //remove some frame items
                         middlePanel.removeAll();
                         buttonPanel.remove(submitButton);
@@ -370,11 +377,11 @@ public class ReservationClient {
                                 "Flight is now boarding at " + gate.getGate());
 
                         //show passenger limited information
-                        String info = "<html>Capacity: " + selectedAirline.getPassengers().size() + "/" +
+                        passengerInfo.setText("<html>Capacity: " + selectedAirline.getPassengers().size() + "/" +
                                 selectedAirline.getCapacity() + " Passengers<br/>" +
-                                selectedAirline.getPassengersLimited().substring(6); //substring to remove html tag
-                        //magic that adds the scrollable panel (do not change this, hours have already been wasted)
-                        middlePanel.add(new JLabel(info), BorderLayout.CENTER);
+                                selectedAirline.getPassengersLimited().substring(6)); //substring to remove html tag
+                        //adds the scrollable panel
+                        middlePanel.add(passengerInfo, BorderLayout.CENTER);
                         frame.add(new JScrollPane(middlePanel), BorderLayout.CENTER);
 
                         //show boarding pass
@@ -385,6 +392,33 @@ public class ReservationClient {
 
                         //refresh the frame
                         frame.repaint();
+                    });
+
+                    refreshButton.addActionListener(actionEvent -> {
+                        try {
+                            //request data from the server
+                            socketWriter.writeObject(selectedAirline.getName());
+                            //receive data from the server
+                            selectedAirline = (Airline) socketReader.readObject();
+                            //create new text
+                            passengerInfo.setText("<html>Capacity: " + selectedAirline.getPassengers().size() + "/" +
+                                    selectedAirline.getCapacity() + " Passengers<br/>" +
+                                    selectedAirline.getPassengersLimited().substring(6)); //substring to remove html tag
+                            //refresh the frame
+                            frame.repaint();
+                        } catch (IOException e) {
+                            if (e.getLocalizedMessage().equals(hostname)) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Could not connect to the server.",
+                                        "Connection error", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (ClassNotFoundException e) { //catch is commented until server completed
+                            JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
+                                    "Connection error", JOptionPane.ERROR_MESSAGE);
+                        }
                     });
 
                     //frame setup
@@ -408,10 +442,10 @@ public class ReservationClient {
                 JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }// catch (ClassNotFoundException e) { //catch is commented until server completed
-//            JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-//                    "Connection error", JOptionPane.ERROR_MESSAGE);
-//        }
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
+                    "Connection error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
