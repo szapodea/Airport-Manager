@@ -29,21 +29,25 @@ public class Southwest implements Airline {
 
     @Override
     public String getDescription() {
-        return "Southwest Airlines is proud to offer flights to Purdue University.\n" +
-                "We are happy to offer free in flight wifi, as well as our amazing snacks.\n" +
-                "In addition, we offer flights for much cheaper than other airlines, " +
-                "and offer two free checked bags.\n" +
-                "We hope you choose Southwest for your next flight.";
+        return "<html><center>Southwest Airlines is proud to offer flights to Purdue University.<br/>" +
+                "We are happy to offer free in flight wifi, as well as our amazing snacks.<br/>" +
+                "In addition, we offer flights for much cheaper than other airlines, <" +
+                "and offer two free checked bags.<br/>" +
+                "We hope you choose Southwest for your next flight.</center><html>";
     }
 
+    @Override
+    public int getCapacity() {
+        return 100;
+    }
 
     @Override
-    public ArrayList getPassengers() {
+    public ArrayList<Passenger> getPassengers() {
         return passengers;
     }
 
     @Override
     public void addPassenger(Passenger passenger) {
-        passengers.add(passenger);
+        passengers.add(0, passenger);
     }
 }
