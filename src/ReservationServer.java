@@ -31,22 +31,15 @@ public class ReservationServer {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server Started. Waiting connection to Port 1111");
             while (true) {
-                Socket socket = serverSocket.accept();
-                System.out.println("connected");
                 try {
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-                    objectOutputStream.flush();
-                    PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
-                    ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-
-                    //objectInputStream.close();
-                    //objectOutputStream.close();
+                    Socket socket = serverSocket.accept();
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
                 }
-                ClientHandler clientHandler = new ClientHandler();
-                Thread clientHandlerThread = new Thread((Runnable) clientHandler);
+                System.out.println("connected");
+                ClientHandler clientHandler = new ClientHandler(socket);
+                Thread clientHandlerThread = new Thread(clientHandler);
                 clientHandlerThread.start();
             }
         } catch (IOException e) {
@@ -54,11 +47,4 @@ public class ReservationServer {
         }
     }
 
-
-
-
-    public void run() {
-        System.out.printf("Connection received from port %d", port);
-
-    }
 }
