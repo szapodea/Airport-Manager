@@ -16,35 +16,49 @@ import java.net.Socket;
  * @version 11/16/19
  */
 
-public class ReservationServer implements Runnable {
+public class ReservationServer {
     private static int port = 1111;
     private Socket socket;
+    Thread thread;
 
-    public ReservationServer(Socket socket) {
+
+    public ReservationServer(Socket socket) throws IOException {
         this.socket = socket;
     }
-    public static void main(String[] args) {
+
+    public void serveClients() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server Started. Waiting connection to Port 1111");
-            Socket socket = serverSocket.accept();
+            while (true) {
+                Socket socket = serverSocket.accept();
+                System.out.println("connected");
+                try {
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                    objectOutputStream.flush();
+                    PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+                    ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+
+                    //objectInputStream.close();
+                    //objectOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    break;
+                }
+                ClientHandler clientHandler = new ClientHandler();
+                Thread clientHandlerThread = new Thread((Runnable) clientHandler);
+                clientHandlerThread.start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
+
+
+
     public void run() {
         System.out.printf("Connection received from port %d", port);
-        try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            objectOutputStream.flush();
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 
-            //objectInputStream.close();
-            //objectOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
