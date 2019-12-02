@@ -14,6 +14,7 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
 
     private BufferedWriter bufferedWriter;
+
     private ObjectInputStream socketReader;
     private ObjectOutputStream socketWriter;
     private Delta delta;
@@ -22,7 +23,8 @@ public class ClientHandler implements Runnable {
 
     public ClientHandler(Socket socket, Delta delta, Southwest southwest, Alaska alaska) throws NullPointerException {
         try {
-            bufferedWriter = new BufferedWriter(new FileWriter("reservations.txt"));
+
+            bufferedWriter = new BufferedWriter(new FileWriter("reservations.txt", true));
             socketWriter = new ObjectOutputStream(socket.getOutputStream());
             socketWriter.flush();
             socketReader = new ObjectInputStream(socket.getInputStream());

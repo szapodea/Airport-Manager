@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * The server can handle multiple clients simultaneously. It will track and record ticket sales by writing
@@ -18,11 +19,54 @@ public class ReservationServer {
     private static Delta delta = new Delta();
     private static Southwest southwest = new Southwest();
     private static Alaska alaska = new Alaska();
+    private static BufferedReader bufferedReader;
 
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server Started. Waiting connection to Port 1111");
+
+            bufferedReader = new BufferedReader(new FileReader("reservations.txt"));
+            ArrayList<String> reservationsList = new ArrayList<>();
+            String temp = "";
+            while ((temp = bufferedReader.readLine()) != null) {
+                reservationsList.add(temp);
+            }
+            for (int i = 0; i < reservationsList.size(); i++) {
+                if(reservationsList.get(i).equals("Delta passenger list")) {
+                    i ++;
+                    while(!reservationsList.get(i).isEmpty()) {
+                        String lastInitial = reservationsList.get(i).substring(0, 0);
+                        String firstName = reservationsList.get(i).substring(2, reservationsList.get(i).indexOf(","));
+                        int age = Integer.parseInt( reservationsList.get(i).substring
+                                (reservationsList.get(i).indexOf(",") + 1));
+                        delta.addPassenger(new Passenger(firstName, lastInitial, age));
+                        i += 2;
+                    }
+                } else if((reservationsList.get(i).equals("Southwest passenger list"))) {
+                    i ++;
+                    while(!reservationsList.get(i).isEmpty()) {
+                        String lastInitial = reservationsList.get(i).substring(0, 0);
+                        String firstName = reservationsList.get(i).substring(2, reservationsList.get(i).indexOf(","));
+                        int age = Integer.parseInt( reservationsList.get(i).substring
+                                (reservationsList.get(i).indexOf(",") + 1));
+                        southwest.addPassenger(new Passenger(firstName, lastInitial, age));
+                        i += 2;
+                    }
+                } else if(reservationsList.get(i).equals("Alaska passenger list")) {
+                    i ++;
+                    while(!reservationsList.get(i).isEmpty()) {
+                        String lastInitial = reservationsList.get(i).substring(0, 0);
+                        String firstName = reservationsList.get(i).substring(2, reservationsList.get(i).indexOf(","));
+                        int age = Integer.parseInt( reservationsList.get(i).substring
+                                (reservationsList.get(i).indexOf(",") + 1));
+                        alaska.addPassenger(new Passenger(firstName, lastInitial, age));
+                        i += 2;
+                    }
+                }
+
+            }
+
             while (true) {
                 try {
                     Socket socket = serverSocket.accept();
