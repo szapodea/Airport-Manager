@@ -1,7 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.PrimitiveIterator;
 
 /**
  * The server can handle multiple clients simultaneously. It will track and record ticket sales by writing
@@ -15,32 +14,23 @@ import java.util.PrimitiveIterator;
  */
 
 public class ReservationServer {
-    private static int port = 1111;
-    private Socket socket;
-    Thread thread;
+    final private static int port = 1111;
 
-
-    public ReservationServer(Socket socket) throws IOException {
-        this.socket = socket;
-    }
-
-    public void serveClients() {
+    public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server Started. Waiting connection to Port 1111");
             while (true) {
                 try {
                     Socket socket = serverSocket.accept();
-                    PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-
+                    System.out.println("connected");
+                    ClientHandler clientHandler = new ClientHandler(socket);
+                    Thread clientHandlerThread = new Thread(clientHandler);
+                    clientHandlerThread.start();
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
                 }
-                System.out.println("connected");
-                ClientHandler clientHandler = new ClientHandler(socket);
-                Thread clientHandlerThread = new Thread(clientHandler);
-                clientHandlerThread.start();
             }
         } catch (IOException e) {
             e.printStackTrace();

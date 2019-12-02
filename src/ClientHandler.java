@@ -28,7 +28,6 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.flush();
@@ -41,20 +40,4 @@ public class ClientHandler implements Runnable {
             e.printStackTrace();
         }
     }
-
-
-    public static void main(String[] args) {
-        ReservationServer server;
-        Socket socket = new Socket();
-        try {
-            server = new ReservationServer(socket);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        server.serveClients();
-    }
-
-
 }
