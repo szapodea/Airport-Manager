@@ -1,9 +1,7 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.PrimitiveIterator;
 
 /**
  * The server can handle multiple clients simultaneously. It will track and record ticket sales by writing
@@ -33,10 +31,8 @@ public class ReservationServer {
             while (true) {
                 try {
                     Socket socket = serverSocket.accept();
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-                    objectOutputStream.flush();
-                    PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
-                    ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+                    PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
