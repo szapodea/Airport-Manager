@@ -229,20 +229,28 @@ public class ReservationClient {
                         frame.repaint();
                     });
 
+                    //confirms the user wants to book the flight/tells the user they cannot book a flight
                     chooseFlightButton.addActionListener(actionEvent -> {
-                        //remove some frame items
-                        middlePanel.removeAll();
-                        buttonPanel.remove(chooseFlightButton);
+                        if (selectedAirline.getCapacity() <= selectedAirline.getPassengerCount()) {
+                            JOptionPane.showMessageDialog(null, "That airline is full.",
+                                    "Max capacity", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            //increment the passenger count
+                            selectedAirline.incrementPassengerCount();
 
-                        //set the top text
-                        topLabel.setText("<html>Are you sure you want to book a flight on <br/>" +
-                                selectedAirline.getName() + "?</html>");
+                            //remove some frame items
+                            middlePanel.removeAll();
+                            buttonPanel.remove(chooseFlightButton);
 
-                        //add confirmation buttons
-                        goToChooseFlightButton.setText("No, I want a different flight.");
-                        buttonPanel.add(goToChooseFlightButton);
-                        buttonPanel.add(confirmFlightButton);
+                            //set the top text
+                            topLabel.setText("<html>Are you sure you want to book a flight on <br/>" +
+                                    selectedAirline.getName() + "?</html>");
 
+                            //add confirmation buttons
+                            goToChooseFlightButton.setText("No, I want a different flight.");
+                            buttonPanel.add(goToChooseFlightButton);
+                            buttonPanel.add(confirmFlightButton);
+                        }
                     });
 
                     //prompts the user to input their information
@@ -445,6 +453,8 @@ public class ReservationClient {
             JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
                     "Connection error", JOptionPane.ERROR_MESSAGE);
         }
+        JOptionPane.showMessageDialog(null, "Thank for using Purdue University Airline " +
+                "Managment System!", "Thank you!", JOptionPane.PLAIN_MESSAGE);
     }
 
     /**

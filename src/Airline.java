@@ -59,4 +59,15 @@ public interface Airline extends Serializable {
      * @param passenger Passenger to add the the passenger array list
      */
     void addPassenger(Passenger passenger);
+
+    /**
+     * Increments size by 1
+     */
+    void incrementPassengerCount();
+
+    /**
+     * Returns the current amount of passengers on the airline
+     * @return An int with the amount of passengers currently booked/booking
+     */
+    int getPassengerCount();
 }

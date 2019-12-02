@@ -9,12 +9,14 @@ import java.util.ArrayList;
 
 public class Southwest implements Airline {
     private ArrayList<Passenger> passengers;
+    private int passengerCount;
 
     /**
      * Constructs a Southwest airline object, initializes passenger ArrayList
      */
     public Southwest() {
         passengers = new ArrayList<>();
+        passengerCount = 0;
     }
 
     @Override
@@ -49,5 +51,15 @@ public class Southwest implements Airline {
     @Override
     public void addPassenger(Passenger passenger) {
         passengers.add(0, passenger);
+    }
+
+    @Override
+    public void incrementPassengerCount() {
+        passengerCount++;
+    }
+
+    @Override
+    public int getPassengerCount() {
+        return passengerCount;
     }
 }

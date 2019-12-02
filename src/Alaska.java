@@ -9,12 +9,14 @@ import java.util.ArrayList;
 
 public class Alaska implements Airline {
     private ArrayList<Passenger> passengers;
+    private int passengerCount;
 
     /**
      * Constructs a Alaska airline object, initializes passenger ArrayList
      */
     public Alaska() {
         passengers = new ArrayList<>();
+        passengerCount = 0;
     }
 
     @Override
@@ -51,5 +53,15 @@ public class Alaska implements Airline {
     @Override
     public void addPassenger(Passenger passenger) {
         passengers.add(0, passenger);
+    }
+
+    @Override
+    public void incrementPassengerCount() {
+        passengerCount++;
+    }
+
+    @Override
+    public int getPassengerCount() {
+        return passengerCount;
     }
 }
