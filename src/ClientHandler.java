@@ -28,11 +28,12 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
+
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(this.socket.getOutputStream());
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.flush();
-            PrintWriter printWriter = new PrintWriter(this.socket.getOutputStream());
-            ObjectInputStream objectInputStream = new ObjectInputStream(this.socket.getInputStream());
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 
             //objectInputStream.close();
             //objectOutputStream.close();
@@ -42,7 +43,6 @@ public class ClientHandler implements Runnable {
     }
 
 
-    /**
     public static void main(String[] args) {
         ReservationServer server;
         Socket socket = new Socket();
@@ -55,7 +55,6 @@ public class ClientHandler implements Runnable {
 
         server.serveClients();
     }
-     */
 
 
 }

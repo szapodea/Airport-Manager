@@ -33,6 +33,10 @@ public class ReservationServer {
             while (true) {
                 try {
                     Socket socket = serverSocket.accept();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                    objectOutputStream.flush();
+                    PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+                    ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
