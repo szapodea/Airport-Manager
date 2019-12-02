@@ -13,7 +13,7 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
 
-    private Socket socket;
+    private BufferedWriter bufferedWriter;
     private ObjectInputStream socketReader;
     private ObjectOutputStream socketWriter;
     private Delta delta;
@@ -21,10 +21,11 @@ public class ClientHandler implements Runnable {
     private Alaska alaska;
 
     public ClientHandler(Socket socket, Delta delta, Southwest southwest, Alaska alaska) throws NullPointerException {
-        this.socket = socket;
         try {
-            socketReader = new ObjectInputStream(socket.getInputStream());
+            bufferedWriter = new BufferedWriter(new FileWriter("reservations.txt"));
             socketWriter = new ObjectOutputStream(socket.getOutputStream());
+            socketWriter.flush();
+            socketReader = new ObjectInputStream(socket.getInputStream());
             this.delta = delta;
             this.southwest = southwest;
             this.alaska = alaska;
@@ -36,22 +37,17 @@ public class ClientHandler implements Runnable {
     /**
      * Where to implement the method
      */
-
     @Override
     public void run() {
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            objectOutputStream.flush();
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("reservations.txt"));
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-
             socketWriter.writeObject(delta);
+            socketWriter.flush();
             socketWriter.writeObject(alaska);
+            socketWriter.flush();
             socketWriter.writeObject(southwest);
+            socketWriter.flush();
 
-            Airline airline;
-
-            airline = (Airline) socketReader.readObject();
+            Airline airline = (Airline) socketReader.readObject();
 
             if (airline instanceof Delta) {
                 delta = (Delta) airline;
@@ -106,10 +102,13 @@ public class ClientHandler implements Runnable {
 
             if (airline instanceof Delta) {
                 socketWriter.writeObject(delta);
+                socketWriter.flush();
             } else if (airline instanceof Alaska) {
                 socketWriter.writeObject(alaska);
+                socketWriter.flush();
             } else if (airline instanceof Southwest) {
                 socketWriter.writeObject(southwest);
+                socketWriter.flush();
             }
 
             //objectInputStream.close();

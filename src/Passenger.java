@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * A Passenger needs a first name, last name, and age.
  * Note: A passenger does not need a boarding pass when they are initially created,
@@ -7,7 +9,7 @@
  * @version 11/16/19
  */
 
-public class Passenger {
+public class Passenger implements Serializable {
     private String firstName;
     private String lastName;
     private int age;

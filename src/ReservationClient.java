@@ -51,8 +51,9 @@ public class ReservationClient {
         try {
             //server connection
             socket = new Socket(hostname, port);
-            socketReader = new ObjectInputStream(socket.getInputStream());
             socketWriter = new ObjectOutputStream(socket.getOutputStream());
+            socketWriter.flush();
+            socketReader = new ObjectInputStream(socket.getInputStream());
 
             //get the airlines from the server
             Delta delta = (Delta) socketReader.readObject();
@@ -166,6 +167,8 @@ public class ReservationClient {
                     //removes the frame if the exit button is pressed
                     exitButton.addActionListener(actionEvent -> {
                         frame.dispose();
+                        JOptionPane.showMessageDialog(null, "Thank for using Purdue University Airline " +
+                                "Management System!", "Thank you!", JOptionPane.PLAIN_MESSAGE);
                     });
 
                     //Confirms that the user wants to book a flight
@@ -360,15 +363,9 @@ public class ReservationClient {
                         //send data to the server
                         try {
                             socketWriter.writeObject(selectedAirline);
+                            socketWriter.flush();
                         } catch (IOException e) {
-                            if (e.getLocalizedMessage().equals(hostname)) {
-                                JOptionPane.showMessageDialog(null,
-                                        "Could not connect to the server.",
-                                        "Connection error", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                            }
+                            e.printStackTrace();
                         }
 
                         //remove some frame items
@@ -405,6 +402,7 @@ public class ReservationClient {
                         try {
                             //request data from the server
                             socketWriter.writeObject(selectedAirline.getName());
+                            socketWriter.flush();
                             //receive data from the server
                             selectedAirline = (Airline) socketReader.readObject();
                             //create new text
@@ -413,18 +411,8 @@ public class ReservationClient {
                                     selectedAirline.getPassengersLimited().substring(6)); //substring to remove html tag
                             //refresh the frame
                             frame.repaint();
-                        } catch (IOException e) {
-                            if (e.getLocalizedMessage().equals(hostname)) {
-                                JOptionPane.showMessageDialog(null,
-                                        "Could not connect to the server.",
-                                        "Connection error", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        } catch (ClassNotFoundException e) { //catch is commented until server completed
-                            JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-                                    "Connection error", JOptionPane.ERROR_MESSAGE);
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
                         }
                     });
 
@@ -441,20 +429,9 @@ public class ReservationClient {
                     frame.setVisible(true);
                 }
             });
-        } catch (IOException e) {
-            if (e.getLocalizedMessage().equals(hostname)) {
-                JOptionPane.showMessageDialog(null, "Could not connect to the server.",
-                        "Connection error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
-                    "Connection error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
         }
-        JOptionPane.showMessageDialog(null, "Thank for using Purdue University Airline " +
-                "Managment System!", "Thank you!", JOptionPane.PLAIN_MESSAGE);
     }
 
     /**
