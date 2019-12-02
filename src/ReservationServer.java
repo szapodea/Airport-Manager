@@ -18,6 +18,9 @@ public class ReservationServer {
     private static Delta delta = new Delta();
     private static Southwest southwest = new Southwest();
     private static Alaska alaska = new Alaska();
+    private int deltaCounter = 0;
+    private int southWestCounter = 0;
+    private int alaskaCounter = 0;
 
     public static void main(String[] args) {
         try {
