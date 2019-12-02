@@ -401,7 +401,7 @@ public class ReservationClient {
                     refreshButton.addActionListener(actionEvent -> {
                         try {
                             //request data from the server
-                            socketWriter.writeObject(selectedAirline.getName());
+                            socketWriter.writeObject(selectedAirline);
                             socketWriter.flush();
                             //receive data from the server
                             selectedAirline = (Airline) socketReader.readObject();

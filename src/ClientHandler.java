@@ -98,21 +98,20 @@ public class ClientHandler implements Runnable {
             bufferedWriter.write("EOF");
             bufferedWriter.close();
 
-            airline = (Airline) socketReader.readObject();
+            while (true) {
+                Airline refreshAirline = (Airline) socketReader.readObject();
 
-            if (airline instanceof Delta) {
-                socketWriter.writeObject(delta);
-                socketWriter.flush();
-            } else if (airline instanceof Alaska) {
-                socketWriter.writeObject(alaska);
-                socketWriter.flush();
-            } else if (airline instanceof Southwest) {
-                socketWriter.writeObject(southwest);
-                socketWriter.flush();
+                if (refreshAirline instanceof Delta) {
+                    socketWriter.writeObject(delta);
+                    socketWriter.flush();
+                } else if (refreshAirline instanceof Alaska) {
+                    socketWriter.writeObject(alaska);
+                    socketWriter.flush();
+                } else if (refreshAirline instanceof Southwest) {
+                    socketWriter.writeObject(southwest);
+                    socketWriter.flush();
+                }
             }
-
-            //objectInputStream.close();
-            //objectOutputStream.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
