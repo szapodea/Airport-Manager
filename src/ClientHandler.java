@@ -51,9 +51,13 @@ public class ClientHandler implements Runnable {
             socketWriter.writeObject(delta);
             socketWriter.writeObject(alaska);
             socketWriter.writeObject(southwest);
+
+            Airline airline;
+
+            airline = (Airline) socketReader.readObject();
             //objectInputStream.close();
             //objectOutputStream.close();
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
