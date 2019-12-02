@@ -15,6 +15,9 @@ import java.net.Socket;
 
 public class ReservationServer {
     final private static int port = 1111;
+    private static Delta delta = new Delta();
+    private static Southwest southwest = new Southwest();
+    private static Alaska alaska = new Alaska();
 
     public static void main(String[] args) {
         try {
@@ -24,7 +27,7 @@ public class ReservationServer {
                 try {
                     Socket socket = serverSocket.accept();
                     System.out.println("connected");
-                    ClientHandler clientHandler = new ClientHandler(socket);
+                    ClientHandler clientHandler = new ClientHandler(socket, delta, southwest, alaska);
                     Thread clientHandlerThread = new Thread(clientHandler);
                     clientHandlerThread.start();
                 } catch (IOException e) {

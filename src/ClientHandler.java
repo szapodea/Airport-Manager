@@ -17,9 +17,23 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {
 
     private Socket socket;
+    ObjectInputStream socketReader;
+    ObjectOutputStream socketWriter;
+    Delta delta;
+    Southwest southwest;
+    Alaska alaska;
 
-    public ClientHandler(Socket socket) throws NullPointerException {
+    public ClientHandler(Socket socket, Delta delta, Southwest southwest, Alaska alaska) throws NullPointerException {
         this.socket = socket;
+        try {
+            socketReader = new ObjectInputStream(socket.getInputStream());
+            socketWriter = new ObjectOutputStream(socket.getOutputStream());
+            this.delta = delta;
+            this.southwest = southwest;
+            this.alaska = alaska;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -34,6 +48,9 @@ public class ClientHandler implements Runnable {
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 
+            socketWriter.writeObject(delta);
+            socketWriter.writeObject(alaska);
+            socketWriter.writeObject(southwest);
             //objectInputStream.close();
             //objectOutputStream.close();
         } catch (IOException e) {
