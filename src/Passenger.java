@@ -5,8 +5,8 @@ import java.io.Serializable;
  * Note: A passenger does not need a boarding pass when they are initially created,
  * but they should have one when they buy a ticket.
  *
- * @author Stephan Zapodeanu
- * @version 11/16/19
+ * @author Stephan Zapodeanu, Luke Bainbridge
+ * @version December 3rd, 2019
  */
 
 public class Passenger implements Serializable {

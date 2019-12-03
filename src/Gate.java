@@ -7,8 +7,8 @@ import java.util.Random;
  * Note: Gates are associated with flights after the first passenger buys a ticket, and can
  * be deleted after the flight is full.
  *
- * @author Luke Bainbridge
- * @version 11/17/19
+ * @author Luke Bainbridge, Stephan Zapodeanu
+ * @version December 3rd, 2019
  */
 
 public class Gate implements Serializable {

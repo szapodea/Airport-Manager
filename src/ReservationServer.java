@@ -10,12 +10,12 @@ import java.util.ArrayList;
  * Example: Client 1 and Client 2 are both connected to the server and booking a Southwest flight.
  * If Client 1 books the last Southwest ticket, Client 2 should no longer be able to book it.
  *
- * @author Stephan Zapodeanu
- * @version 11/16/19
+ * @author Stephan Zapodeanu, Luke Bainbridge
+ * @version December 3rd, 2019
  */
 
 public class ReservationServer {
-    final private static int port = 1111;
+    final private static int PORT = 1111;
     private static Delta delta = new Delta();
     private static Southwest southwest = new Southwest();
     private static Alaska alaska = new Alaska();
@@ -23,7 +23,7 @@ public class ReservationServer {
 
     public static void main(String[] args) {
         try {
-            ServerSocket serverSocket = new ServerSocket(port);
+            ServerSocket serverSocket = new ServerSocket(PORT);
             System.out.println("Server Started. Waiting connection to Port 1111");
 
             bufferedReader = new BufferedReader(new FileReader("reservations.txt"));
@@ -33,33 +33,33 @@ public class ReservationServer {
                 reservationsList.add(temp);
             }
             for (int i = 0; i < reservationsList.size(); i++) {
-                if(reservationsList.get(i).equals("Delta passenger list")) {
-                    i ++;
-                    while(!reservationsList.get(i).isEmpty()) {
+                if (reservationsList.get(i).equals("Delta passenger list")) {
+                    i++;
+                    while (!reservationsList.get(i).isEmpty()) {
                         String lastInitial = reservationsList.get(i).substring(0, 0);
                         String firstName = reservationsList.get(i).substring(2, reservationsList.get(i).indexOf(","));
-                        int age = Integer.parseInt( reservationsList.get(i).substring
-                                (reservationsList.get(i).indexOf(",") + 1));
+                        int age = Integer.parseInt( reservationsList.get(i)
+                                .substring(reservationsList.get(i).indexOf(",") + 1));
                         delta.addPassenger(new Passenger(firstName, lastInitial, age));
                         i += 2;
                     }
-                } else if((reservationsList.get(i).equals("Southwest passenger list"))) {
-                    i ++;
-                    while(!reservationsList.get(i).isEmpty()) {
+                } else if ((reservationsList.get(i).equals("Southwest passenger list"))) {
+                    i++;
+                    while (!reservationsList.get(i).isEmpty()) {
                         String lastInitial = reservationsList.get(i).substring(0, 0);
                         String firstName = reservationsList.get(i).substring(2, reservationsList.get(i).indexOf(","));
-                        int age = Integer.parseInt( reservationsList.get(i).substring
-                                (reservationsList.get(i).indexOf(",") + 1));
+                        int age = Integer.parseInt( reservationsList.get(i)
+                                .substring(reservationsList.get(i).indexOf(",") + 1));
                         southwest.addPassenger(new Passenger(firstName, lastInitial, age));
                         i += 2;
                     }
-                } else if(reservationsList.get(i).equals("Alaska passenger list")) {
-                    i ++;
-                    while(!reservationsList.get(i).isEmpty()) {
+                } else if (reservationsList.get(i).equals("Alaska passenger list")) {
+                    i++;
+                    while (!reservationsList.get(i).isEmpty()) {
                         String lastInitial = reservationsList.get(i).substring(0, 0);
                         String firstName = reservationsList.get(i).substring(2, reservationsList.get(i).indexOf(","));
-                        int age = Integer.parseInt( reservationsList.get(i).substring
-                                (reservationsList.get(i).indexOf(",") + 1));
+                        int age = Integer.parseInt( reservationsList.get(i)
+                                .substring(reservationsList.get(i).indexOf(",") + 1));
                         alaska.addPassenger(new Passenger(firstName, lastInitial, age));
                         i += 2;
                     }

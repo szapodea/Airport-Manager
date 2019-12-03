@@ -19,8 +19,8 @@ import java.util.Objects;
  * updated data on that airline (this is for the refresh button)
  * 4. expects server to write out the airline object of the name that was sent with updated information
  *
- * @author Luke Bainbridge
- * @version 11/26/19
+ * @author Luke Bainbridge, Stephan Zapodeanu
+ * @version December 3rd, 2019
  */
 
 public class ReservationClient {
@@ -450,7 +450,7 @@ public class ReservationClient {
                 }
             });
         } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

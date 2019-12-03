@@ -1,8 +1,6 @@
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,8 +10,8 @@ import java.util.Scanner;
  * Sources of Help:
  * JASPER DAY
  *
- * @author Stephan Zapodeanu
- * @version November 8th, 2019
+ * @author Stephan Zapodeanu, Luke Bainbridge
+ * @version December 3rd, 2019
  */
 
 public class ClientHandler implements Runnable {
@@ -53,7 +51,7 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            if(delta.getPassengers().size() == 0 && alaska.getPassengers().size() == 0 &&
+            if (delta.getPassengers().size() == 0 && alaska.getPassengers().size() == 0 &&
                     southwest.getPassengers().size() == 0 && file.length() != 0) {
                 readFile(file);
             }
@@ -66,7 +64,7 @@ public class ClientHandler implements Runnable {
             socketWriter.flush();
 
             Object checkAirline;
-            //send data to the client for info about a full flight
+            //send deltata to the client for info about a full flight
             while (true) {
                 checkAirline = socketReader.readObject();
                 if (checkAirline instanceof String) {
@@ -202,7 +200,7 @@ public class ClientHandler implements Runnable {
                 list.add(scanner.nextLine());
             }
             for (int i = 0; i < list.size() ; i++) {
-                if(list.get(i).equals("EOF")) {
+                if (list.get(i).equals("EOF")) {
                     list.remove(i);
                 }
             }
@@ -231,8 +229,8 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void readFile(File file) {
-        if(file.length() == 0) {
+    public void readFile(File fileTemp) {
+        if (fileTemp.length() == 0) {
 
         } else {
             list.clear();
@@ -241,7 +239,7 @@ public class ClientHandler implements Runnable {
             }
 
             for (int i = 0; i < list.size(); i++) {
-                if(list.get(i).contains("Delta Passenger List") && !list.get(i + 1).isEmpty()) {
+                if (list.get(i).contains("Delta Passenger List") && !list.get(i + 1).isEmpty()) {
                     String lastName = list.get(i + 1).substring(0, 1);
                     String firstName = list.get(i + 1).substring(3, list.get(i + 1).indexOf(","));
                     int age = Integer.parseInt(list.get(i + 1).substring(list.get(i + 1).indexOf(",") + 2));
@@ -249,7 +247,7 @@ public class ClientHandler implements Runnable {
                     Passenger passenger = new Passenger(firstName, lastName, age);
                     delta.addPassenger(passenger);
                 }
-                if(list.get(i).contains("-------------------DELTA") && !list.get(i + 1).isEmpty()) {
+                if (list.get(i).contains("-------------------DELTA") && !list.get(i + 1).isEmpty()) {
                     String lastName = list.get(i + 1).substring(0, 1);
                     String firstName = list.get(i + 1).substring(3, list.get(i + 1).indexOf(","));
                     int age = Integer.parseInt(list.get(i + 1).substring(list.get(i + 1).indexOf(",") + 2));
@@ -257,7 +255,7 @@ public class ClientHandler implements Runnable {
                     Passenger passenger = new Passenger(firstName, lastName, age);
                     delta.addPassenger(passenger);
                 }
-                if(list.get(i).contains("Southwest Passenger List") && !list.get(i + 1).isEmpty()) {
+                if (list.get(i).contains("Southwest Passenger List") && !list.get(i + 1).isEmpty()) {
                     String lastName = list.get(i + 1).substring(0, 1);
                     String firstName = list.get(i + 1).substring(3, list.get(i + 1).indexOf(","));
                     int age = Integer.parseInt(list.get(i + 1).substring(list.get(i + 1).indexOf(",") + 2));
@@ -265,7 +263,7 @@ public class ClientHandler implements Runnable {
                     Passenger passenger = new Passenger(firstName, lastName, age);
                     southwest.addPassenger(passenger);
                 }
-                if(list.get(i).contains("-------------------SOUTHWEST") && !list.get(i + 1).isEmpty()) {
+                if (list.get(i).contains("-------------------SOUTHWEST") && !list.get(i + 1).isEmpty()) {
                     String lastName = list.get(i + 1).substring(0, 1);
                     String firstName = list.get(i + 1).substring(3, list.get(i + 1).indexOf(","));
                     int age = Integer.parseInt(list.get(i + 1).substring(list.get(i + 1).indexOf(",") + 2));
@@ -273,7 +271,7 @@ public class ClientHandler implements Runnable {
                     Passenger passenger = new Passenger(firstName, lastName, age);
                     southwest.addPassenger(passenger);
                 }
-                if(list.get(i).contains("Alaska Passenger List") && !list.get(i + 1).isEmpty()) {
+                if (list.get(i).contains("Alaska Passenger List") && !list.get(i + 1).isEmpty()) {
                     String lastName = list.get(i + 1).substring(0, 1);
                     String firstName = list.get(i + 1).substring(3, list.get(i + 1).indexOf(","));
                     int age = Integer.parseInt(list.get(i + 1).substring(list.get(i + 1).indexOf(",") + 2));
@@ -281,7 +279,7 @@ public class ClientHandler implements Runnable {
                     Passenger passenger = new Passenger(firstName, lastName, age);
                     alaska.addPassenger(passenger);
                 }
-                if(list.get(i).contains("-------------------ALASKA") && !list.get(i + 1).isEmpty()) {
+                if (list.get(i).contains("-------------------ALASKA") && !list.get(i + 1).isEmpty()) {
                     String lastName = list.get(i + 1).substring(0, 1);
                     String firstName = list.get(i + 1).substring(3, list.get(i + 1).indexOf(","));
                     int age = Integer.parseInt(list.get(i + 1).substring(list.get(i + 1).indexOf(",") + 2));
@@ -324,28 +322,28 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void printFile(Delta delta, Southwest southwest, Alaska alaska) {
+    public void printFile(Delta delta1, Southwest southwest1, Alaska alaska1) {
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file, false));
-            startFile(delta);
-            for (int i = 0; i < delta.getPassengers().size(); i++) {
-                bufferedWriter.write(delta.getPassengers().get(i).toString());
+            startFile(delta1);
+            for (int i = 0; i < delta1.getPassengers().size(); i++) {
+                bufferedWriter.write(delta1.getPassengers().get(i).toString());
                 bufferedWriter.newLine();
                 bufferedWriter.write("-------------------DELTA");
                 bufferedWriter.newLine();
             }
             bufferedWriter.newLine();
-            startFile(southwest);
-            for (int i = 0; i < southwest.getPassengers().size(); i++) {
-                bufferedWriter.write(southwest.getPassengers().get(i).toString());
+            startFile(southwest1);
+            for (int i = 0; i < southwest1.getPassengers().size(); i++) {
+                bufferedWriter.write(southwest1.getPassengers().get(i).toString());
                 bufferedWriter.newLine();
                 bufferedWriter.write("-------------------SOUTHWEST");
                 bufferedWriter.newLine();
             }
             bufferedWriter.newLine();
-            startFile(alaska);
-            for (int i = 0; i < alaska.getPassengers().size(); i++) {
-                bufferedWriter.write(alaska.getPassengers().get(i).toString());
+            startFile(alaska1);
+            for (int i = 0; i < alaska1.getPassengers().size(); i++) {
+                bufferedWriter.write(alaska1.getPassengers().get(i).toString());
                 bufferedWriter.newLine();
                 bufferedWriter.write("-------------------ALASKA");
                 bufferedWriter.newLine();

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 /**
  * An interface that extends Serializable.
  *
- * @author Luke Bainbridge
- * @version 11/17/19
+ * @author Luke Bainbridge, Stephan Zapodeanu
+ * @version December 3rd, 2019
  */
 
 public interface Airline extends Serializable {
@@ -40,9 +40,9 @@ public interface Airline extends Serializable {
     default String getPassengersLimited() {
         StringBuilder passengersLimited = new StringBuilder("<html>");
         for (int i = 0; i < getPassengers().size(); i++) {
-            passengersLimited.append(getPassengers().get(i).getLastName().charAt(0)).append(". ").
-                    append(getPassengers().get(i).getFirstName()).append(", ").
-                    append(getPassengers().get(i).getAge()).append("<br/>");
+            passengersLimited.append(getPassengers().get(i).getLastName().charAt(0)).append(". ")
+                    .append(getPassengers().get(i).getFirstName()).append(", ")
+                    .append(getPassengers().get(i).getAge()).append("<br/>");
         }
         passengersLimited.append("</html>");
         return passengersLimited.toString();

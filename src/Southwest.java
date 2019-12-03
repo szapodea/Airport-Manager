@@ -3,8 +3,8 @@ import java.util.ArrayList;
 /**
  * A class that implements Airline.
  *
- * @author Luke Bainbridge
- * @version 11/17/19
+ * @author Luke Bainbridge, Stephan Zapodeanu
+ * @version December 3rd, 2019
  */
 
 public class Southwest implements Airline {
