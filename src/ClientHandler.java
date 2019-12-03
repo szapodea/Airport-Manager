@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -49,10 +51,30 @@ public class ClientHandler implements Runnable {
             socketWriter.writeObject(southwest);
             socketWriter.flush();
 
+            Object checkAirline;
+            //send data to the client for info about a full flight
+            while (true) {
+                checkAirline = socketReader.readObject();
+                if (checkAirline instanceof String) {
+                    break;
+                } else if (checkAirline instanceof Delta) {
+                    socketWriter.writeObject(delta);
+                    socketWriter.flush();
+                } else if (checkAirline instanceof Alaska) {
+                    socketWriter.writeObject(alaska);
+                    socketWriter.flush();
+                } else if (checkAirline instanceof Southwest) {
+                    socketWriter.writeObject(southwest);
+                    socketWriter.flush();
+                }
+            }
+
             Airline airline = (Airline) socketReader.readObject();
+            Passenger newPassenger = (Passenger) socketReader.readObject();
 
             if (airline instanceof Delta) {
-                delta = (Delta) airline;
+                delta.addPassenger(newPassenger);
+                delta.incrementPassengerCount();
                 bufferedWriter.write("Delta");
                 bufferedWriter.newLine();
                 bufferedWriter.write(delta.getPassengers().size() + "/" + delta.getCapacity());
@@ -67,7 +89,8 @@ public class ClientHandler implements Runnable {
                 }
                 bufferedWriter.newLine();
             } else if (airline instanceof Alaska) {
-                alaska = (Alaska) airline;
+                alaska.addPassenger(newPassenger);
+                alaska.incrementPassengerCount();
                 bufferedWriter.write("Alaska");
                 bufferedWriter.newLine();
                 bufferedWriter.write(alaska.getPassengers().size() + "/" + alaska.getCapacity());
@@ -82,7 +105,8 @@ public class ClientHandler implements Runnable {
                 }
                 bufferedWriter.newLine();
             } else if (airline instanceof Southwest) {
-                southwest = (Southwest) airline;
+                southwest.addPassenger(newPassenger);
+                southwest.incrementPassengerCount();
                 bufferedWriter.write("Southwest");
                 bufferedWriter.newLine();
                 bufferedWriter.write(southwest.getPassengers().size() + "/" + southwest.getCapacity());

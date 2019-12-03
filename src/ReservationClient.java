@@ -234,6 +234,16 @@ public class ReservationClient {
 
                     //confirms the user wants to book the flight/tells the user they cannot book a flight
                     chooseFlightButton.addActionListener(actionEvent -> {
+                        //get updated data on the passengers
+                        try {
+                            //request data from the server
+                            socketWriter.writeObject(selectedAirline);
+                            socketWriter.flush();
+                            //receive data from the server
+                            selectedAirline = (Airline) socketReader.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         if (selectedAirline.getCapacity() <= selectedAirline.getPassengerCount()) {
                             JOptionPane.showMessageDialog(null, "That airline is full.",
                                     "Max capacity", JOptionPane.ERROR_MESSAGE);
@@ -359,10 +369,9 @@ public class ReservationClient {
                         gate = new Gate(selectedAirline.getTerminal());
                         boardingPass = new BoardingPass(passenger, gate, selectedAirline);
                         selectedAirline.addPassenger(passenger);
-
-                        //send data to the server
                         try {
-                            socketWriter.writeObject(selectedAirline);
+                            //tell the server to be ready to receive an airline
+                            socketWriter.writeObject("stop");
                             socketWriter.flush();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -374,6 +383,16 @@ public class ReservationClient {
 
                         //set middlePanel's layout
                         middlePanel.setLayout(new BorderLayout());
+
+                        try {
+                            //send the airline
+                            socketWriter.writeObject(selectedAirline);
+                            socketWriter.flush();
+                            socketWriter.writeObject(passenger);
+                            socketWriter.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                         //set the top text
                         topLabel.setText("<html>Flight data displaying for " + selectedAirline.getName() +
