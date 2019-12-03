@@ -43,4 +43,9 @@ public class Passenger implements Serializable {
     public void setAge(int age) {
         this.age = age;
     }
+
+    @Override
+    public String toString() {
+        return getLastName().charAt(0) + ". " + getFirstName() + ", " + getAge();
+    }
 }

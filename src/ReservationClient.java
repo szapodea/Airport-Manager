@@ -119,6 +119,7 @@ public class ReservationClient {
                     buttonPanel.add(exitButton);
                     buttonPanel.add(bookFlightButton);
 
+
                     //shows passenger info on backslash press
                     KeyAdapter backslashListener = new KeyAdapter() {
                         @Override
