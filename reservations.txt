@@ -1,9 +1,23 @@
 DELTA
-2/200
+9/200
 Delta Passenger List
+z. matthew, 16
+-------------------DELTA
+z. stephan, 18
+-------------------DELTA
+P. Purdue, 150
+-------------------DELTA
 Z. Stephan, 111
 -------------------DELTA
 p. timbers, 88
+-------------------DELTA
+a. trim, 11
+-------------------DELTA
+Z. Matthew, 100
+-------------------DELTA
+a. where, 6
+-------------------DELTA
+a. I, 7
 -------------------DELTA
 
 SOUTHWEST
@@ -13,11 +27,15 @@ l. timbers, 21
 -------------------SOUTHWEST
 
 ALASKA
-2/100
+4/100
 Alaska Passenger List
+z. matthew, 16
+-------------------ALASKA
 Z. Stephan, 20
 -------------------ALASKA
 p. luke, 19
+-------------------ALASKA
+p. purdue, 31
 -------------------ALASKA
 
 
